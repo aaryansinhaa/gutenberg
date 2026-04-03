@@ -5,17 +5,24 @@ import * as directives from 'vuetify/directives'
 import { createI18n } from 'vue-i18n'
 
 // Mock browser APIs
-global.ResizeObserver = class ResizeObserver {
+globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 
-global.IntersectionObserver = class IntersectionObserver {
+globalThis.IntersectionObserver = class IntersectionObserver {
+  readonly root = null
+  readonly rootMargin = ''
+  readonly thresholds = []
+  
   constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
+  takeRecords() {
+    return []
+  }
 }
 
 // Create Vuetify instance for tests
