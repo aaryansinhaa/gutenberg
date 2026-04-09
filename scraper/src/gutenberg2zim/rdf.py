@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import requests
@@ -25,11 +26,10 @@ class RdfParser:
     def parse(self):
         soup = BeautifulSoup(self.rdf_data, "lxml-xml")
 
-        # The tile of the book: this may or may not be divided
-        # into a new-line-seperated title and subtitle.
-        # If it is, then we will just split the title.
+        # Parse and clean the book title
+        # Title may be divided into newline-separated title and subtitle
         title = soup.find("dcterms:title")
-        full_title = title.text if title else "- No Title -"
+        full_title = clean_marc_notation(title.text) if title else "- No Title -"
         title_elements = full_title.split("\n")
         self.title = title_elements[0]
         self.subtitle = " ".join(title_elements[1:])
@@ -39,7 +39,7 @@ class RdfParser:
         if bookshelf_tag:
             rdf_value = bookshelf_tag.find("rdf:value")
             if isinstance(rdf_value, Tag):  # pragma: no branch
-                self.bookshelf = rdf_value.text
+                self.bookshelf = clean_marc_notation(rdf_value.text)
 
         # Parsing for the LoCC (Library of Congress Classification)
         # Transform it to a shelf identifier
@@ -96,7 +96,8 @@ class RdfParser:
 
             author_name_tag = author_tag.find("pgterms:name")
             if isinstance(author_name_tag, Tag):  # pragma: no branch
-                author_name_elements = author_name_tag.text.split(",")
+                author_name = clean_marc_notation(author_name_tag.text)
+                author_name_elements = author_name.split(",")
 
                 if len(author_name_elements) > 1:
                     self.first_name = " ".join(
@@ -137,6 +138,22 @@ class RdfParser:
             raise Exception(f"Impossible to find license tag in book {self.gid} RDF")
         self.license = license_tag.text
         return self
+
+
+def clean_marc_notation(text: str) -> str:
+    """
+    Remove MARC (Machine-Readable Cataloging) notation from text.
+
+    MARC uses subfield delimiters like $a, $b, $c, etc.
+    Example: "Peter Pan $b [Peter and Wendy]" -> "Peter Pan [Peter and Wendy]"
+
+    Args:
+        text: The text potentially containing MARC notation
+
+    Returns:
+        Text with MARC subfield delimiters removed
+    """
+    return re.sub(r"\$[a-z]\s*", "", text) if text else text
 
 
 def _save_rdf_in_repository(parser: RdfParser) -> None:
