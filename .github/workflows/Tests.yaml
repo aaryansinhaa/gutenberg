@@ -69,6 +69,7 @@ jobs:
         working-directory: ui
         run: |
           npm run test:unit
+          npm run test:integration
 
       - name: Build
         working-directory: ui
