@@ -1,23 +1,30 @@
 {
 	"@metadata": {
 		"authors": [
-			"Apq"
+			"Apq",
+			"Michael FOSS"
 		]
 	},
 	"language": "svenska",
 	"isocode": "sv",
 	"nav": {
-		"home": "Hem"
+		"home": "Hem",
+		"authors": "Författare",
+		"shelves": "Hyllor",
+		"about": "Om"
 	},
 	"home": {
 		"title": "Projekt Gutenberg-biblioteket",
 		"subtitle": "Den första utgivaren av gratis e-böcker"
 	},
 	"about": {
+		"title": "Om Projekt Gutenberg",
 		"offers": "Projekt Gutenberg erbjuder över 60 000 gratis e-böcker",
 		"choose": "Välj bland gratis epub-böcker, gratis Kindle-böcker. Ladda ned dem eller läs dem online.",
 		"qualityTitle": "Vi har e-böcker av hög kvalitet",
-		"qualityDesc": "Alla våra e-böcker publicerades tidigare av bona fide förlag. Vi digitaliserade och korrekturläste dem noggrant med hjälp av tusentals volontärer."
+		"qualityDesc": "Alla våra e-böcker publicerades tidigare av bona fide förlag. Vi digitaliserade och korrekturläste dem noggrant med hjälp av tusentals volontärer.",
+		"collectionStats": "Samlingsstatistik",
+		"collectionTitle": "Om Denna Samling"
 	},
 	"shelves": {
 		"title": "Bokhyllor (A-Z)"
