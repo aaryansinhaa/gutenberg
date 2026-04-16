@@ -1,6 +1,6 @@
 import pytest
 
-from gutenberg2zim.rdf import RdfParser
+from gutenberg2zim.rdf import RdfParser, clean_marc_notation
 
 RDF_HEADER = """
 <?xml version="1.0" encoding="utf-8"?>
@@ -105,6 +105,24 @@ HTML revised by David Widger</pgterms:marc508>
   </rdf:Description>
 </rdf:RDF>
 """  # noqa: E501
+
+
+@pytest.mark.parametrize(
+    "input_text, expected_output",
+    [
+        ("Peter Pan $b [Peter and Wendy]", "Peter Pan [Peter and Wendy]"),
+        ("Title $a Main $b Subtitle $c Edition", "Title Main Subtitle Edition"),
+        ("Normal Title Without MARC", "Normal Title Without MARC"),
+        ("Title$aNo Space", "TitleNo Space"),
+        ("Title $b  Extra Spaces", "Title Extra Spaces"),
+        ("", ""),
+        (None, None),
+        ("Price: $5.99", "Price: $5.99"),
+        ("Title $B uppercase", "Title $B uppercase"),
+    ],
+)
+def test_clean_marc_notation(input_text, expected_output):
+    assert clean_marc_notation(input_text) == expected_output
 
 
 def test_rdf_parser():
